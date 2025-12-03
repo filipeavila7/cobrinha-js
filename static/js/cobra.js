@@ -399,31 +399,35 @@ document.addEventListener("keydown", (evt) => {
 let touchStartX = 0;
 let touchStartY = 0;
 
-canvas.addEventListener("touchstart", (e) => {
+// Captura o toque em qualquer lugar da tela
+document.addEventListener("touchstart", (e) => {
     e.preventDefault(); // impede scroll/zoom
     const touch = e.touches[0];
     touchStartX = touch.clientX;
     touchStartY = touch.clientY;
-}, { passive: false }); // necessário para prevenir o padrão
+}, { passive: false });
 
-canvas.addEventListener("touchend", (e) => {
+document.addEventListener("touchend", (e) => {
     e.preventDefault(); // impede scroll/zoom
     const touch = e.changedTouches[0];
     const deltaX = touch.clientX - touchStartX;
     const deltaY = touch.clientY - touchStartY;
 
+    // ignora toques muito pequenos
     if (Math.abs(deltaX) < 20 && Math.abs(deltaY) < 20) return;
 
+    // verifica direção do swipe
     if (Math.abs(deltaX) > Math.abs(deltaY)) {
-        if (deltaX > 0 && dx !== -1) { dx = 1; dy = 0; }
-        else if (deltaX < 0 && dx !== 1) { dx = -1; dy = 0; }
+        if (deltaX > 0 && dx !== -1) { dx = 1; dy = 0; } // direita
+        else if (deltaX < 0 && dx !== 1) { dx = -1; dy = 0; } // esquerda
     } else {
-        if (deltaY > 0 && dy !== -1) { dx = 0; dy = 1; }
-        else if (deltaY < 0 && dy !== 1) { dx = 0; dy = -1; }
+        if (deltaY > 0 && dy !== -1) { dx = 0; dy = 1; } // baixo
+        else if (deltaY < 0 && dy !== 1) { dx = 0; dy = -1; } // cima
     }
 
-    tocarSomDirecao(dx, dy);
+    tocarSomDirecao(dx, dy); // toca som da direção
 }, { passive: false });
+
 
 
 
