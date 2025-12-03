@@ -52,7 +52,7 @@ canvas{
 /* Para telas menores (ex.: celular) */
 @media (max-width: 480px) {
     main{
-        padding: 20px;
+        padding: 100px;
     }
     body{
         height: 100vh;
