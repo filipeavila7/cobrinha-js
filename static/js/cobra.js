@@ -15,16 +15,6 @@ let contador = document.querySelector("#contador")
 let valor = 0
 
 
-// definir o canvas de acordo com a largura da tela
-function ajustarCanvas() {
-    const menor = Math.min(window.innerWidth, window.innerHeight);
-}
-ajustarCanvas();
-window.addEventListener("resize", ajustarCanvas);
-
-
-
-
 
 let audioUnlocked = false;
 
@@ -75,11 +65,27 @@ document.addEventListener("keydown", (e) => {
 
 // criar o tamanho da arena
 
-const tamanho = 50 // tamanho dos blocos
+let tamanho = 50; // default desktop
+const colunas = 11; // para manter a mesma quantidade de blocos
+let linhas = 11; 
 
-const linhas = canvas.height / tamanho // = 25 linhas na grade
-const colunas = canvas.width / tamanho // = 25 colunas na grade
 
+
+function ajustarCanvas() {
+    // pega menor lado da tela
+    const menorLado = Math.min(window.innerWidth, window.innerHeight);
+    const margem = 20;
+
+    canvas.width = menorLado - margem;
+    canvas.height = menorLado - margem;
+
+    // recalcula tamanho do bloco para caber na grade
+    tamanho = canvas.width / colunas;
+    linhas = Math.floor(canvas.height / tamanho);
+}
+
+ajustarCanvas();
+window.addEventListener("resize", ajustarCanvas);
 
 // criando a cobra, contendo cabeça e 2 pixels de corpo
 
@@ -384,42 +390,31 @@ let touchStartX = 0;
 let touchStartY = 0;
 
 canvas.addEventListener("touchstart", (e) => {
+    e.preventDefault(); // impede scroll/zoom
     const touch = e.touches[0];
     touchStartX = touch.clientX;
     touchStartY = touch.clientY;
-});
+}, { passive: false }); // necessário para prevenir o padrão
 
 canvas.addEventListener("touchend", (e) => {
+    e.preventDefault(); // impede scroll/zoom
     const touch = e.changedTouches[0];
     const deltaX = touch.clientX - touchStartX;
     const deltaY = touch.clientY - touchStartY;
 
-    // só considera swipe significativo (para evitar toques pequenos)
     if (Math.abs(deltaX) < 20 && Math.abs(deltaY) < 20) return;
 
-    // horizontal ou vertical?
     if (Math.abs(deltaX) > Math.abs(deltaY)) {
-        // horizontal
-        if (deltaX > 0 && dx !== -1) { // swipe para a direita
-            dx = 1;
-            dy = 0;
-        } else if (deltaX < 0 && dx !== 1) { // swipe para a esquerda
-            dx = -1;
-            dy = 0;
-        }
+        if (deltaX > 0 && dx !== -1) { dx = 1; dy = 0; }
+        else if (deltaX < 0 && dx !== 1) { dx = -1; dy = 0; }
     } else {
-        // vertical
-        if (deltaY > 0 && dy !== -1) { // swipe para baixo
-            dx = 0;
-            dy = 1;
-        } else if (deltaY < 0 && dy !== 1) { // swipe para cima
-            dx = 0;
-            dy = -1;
-        }
+        if (deltaY > 0 && dy !== -1) { dx = 0; dy = 1; }
+        else if (deltaY < 0 && dy !== 1) { dx = 0; dy = -1; }
     }
 
     tocarSomDirecao(dx, dy);
-});
+}, { passive: false });
+
 
 
 // criar uma função para gerar frutas em lugares aleatorios da arena
