@@ -399,12 +399,12 @@ document.addEventListener("keydown", (evt) => {
 let touchStartX = 0;
 let touchStartY = 0;
 
-canvas.addEventListener("touchstart", (e) => {
-    e.preventDefault(); // impede scroll/zoom
-    const touch = e.touches[0];
-    touchStartX = touch.clientX;
-    touchStartY = touch.clientY;
-}, { passive: false }); // necessário para prevenir o padrão
+document.addEventListener("touchstart", (e) => {
+    if (e.target.id === "btn-play") return; // permite o click do botão
+    e.preventDefault(); // impede scroll/zoom no restante da tela
+    touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+}, { passive: false });
 
 canvas.addEventListener("touchend", (e) => {
     e.preventDefault(); // impede scroll/zoom
