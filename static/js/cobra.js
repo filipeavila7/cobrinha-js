@@ -307,8 +307,8 @@ function moverCobra() {
         tocarSomFruta()// não remove o rabo, fazendo ela crescer
         attContador()
     } else {
-        //remover o rabo
-        cobra.pop()
+        cobra.pop()//remover o rabo
+        
     }
 
 
@@ -466,7 +466,8 @@ function gerarFruta() {
     // caso a cobra ocupe toda a arena
     if (cobra.length >= arenaTotal) {
         gameOver = true;
-        alert("Parabéns — você preencheu a arena! Vitória!");
+        valor = "Victory!"
+        contador.textContent = valor
         return;
         btnReset.style.display = "block"
     }
