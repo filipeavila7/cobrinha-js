@@ -398,45 +398,57 @@ document.addEventListener("keydown", (evt) => {
 
 let touchStartX = 0;
 let touchStartY = 0;
+let swipeDetectado = false;
 
 document.addEventListener("touchstart", (e) => {
-
-    // Se clicou em um botão, deixa o click funcionar!
-    if (e.target.tagName === "BUTTON" || e.target.tagName === "IMG") return;
-
-    e.preventDefault(); // impede scroll ou zoom
-
-    const touch = e.touches[0];
-    touchStartX = touch.clientX;
-    touchStartY = touch.clientY;
-
-}, { passive: false });
-
-
-document.addEventListener("touchend", (e) => {
-
-    // Se soltou o toque em um botão, não queremos swipe.
-    if (e.target.tagName === "BUTTON" || e.target.tagName === "IMG") return;
+    if (e.target.tagName === "IMG") return;
 
     e.preventDefault();
 
-    const touch = e.changedTouches[0];
-    const deltaX = touch.clientX - touchStartX;
-    const deltaY = touch.clientY - touchStartY;
+    const t = e.touches[0];
+    touchStartX = t.clientX;
+    touchStartY = t.clientY;
+    swipeDetectado = false;
 
-    if (Math.abs(deltaX) < 20 && Math.abs(deltaY) < 20) return;
+}, { passive: false });
 
+document.addEventListener("touchmove", (e) => {
+
+    if (e.target.tagName === "IMG") return;
+
+    e.preventDefault();
+
+    if (swipeDetectado) return;
+
+    const t = e.touches[0];
+    const deltaX = t.clientX - touchStartX;
+    const deltaY = t.clientY - touchStartY;
+
+    const MIN_SWIPE = 5;
+
+    // precisa mover um pouco antes de detectar
+    if (Math.abs(deltaX) < MIN_SWIPE && Math.abs(deltaY) < MIN_SWIPE) return;
+
+    // detectar horizontal
     if (Math.abs(deltaX) > Math.abs(deltaY)) {
         if (deltaX > 0 && dx !== -1) { dx = 1; dy = 0; }
         else if (deltaX < 0 && dx !== 1) { dx = -1; dy = 0; }
-    } else {
+    }
+    // detectar vertical
+    else {
         if (deltaY > 0 && dy !== -1) { dx = 0; dy = 1; }
         else if (deltaY < 0 && dy !== 1) { dx = 0; dy = -1; }
     }
 
     tocarSomDirecao(dx, dy);
+    swipeDetectado = true; // impede 100 mudanças na mesma arrastada
 
 }, { passive: false });
+
+document.addEventListener("touchend", () => {
+    swipeDetectado = false;
+}, { passive: false });
+
 
 
 
