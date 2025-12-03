@@ -15,22 +15,29 @@ let contador = document.querySelector("#contador")
 let valor = 0
 
 
-// const sonsDirecao = [
-//     new Audio("static/audio/do-up.aac"),
-//     new Audio("static/audio/re-right.aac"),
-//     new Audio("static/audio/mi-down.aac"),
-//     new Audio("static/audio/fa-left.aac")
-// ]
+// definir o canvas de acordo com a largura da tela
+function ajustarCanvas() {
+    const menor = Math.min(window.innerWidth, window.innerHeight);
+}
+ajustarCanvas();
+window.addEventListener("resize", ajustarCanvas);
 
-// let indiceSom = 0;
 
-//ctx.fillStyle = "green" // cor do quadrado
-//ctx.fillRect(10,10,20,20) //ctx.fillRect(x, y, largura, altura)
+
 
 
 let audioUnlocked = false;
 
-document.addEventListener("keydown", () => {
+document.addEventListener("keydown" , () => {
+    if (!audioUnlocked) {
+        const testSound = new Audio();
+        testSound.play().catch(()=>{}); // tentativa “vazia” só para liberar
+        audioUnlocked = true;
+        console.log("Áudio desbloqueado");
+    }
+});
+
+document.addEventListener("click" , () => {
     if (!audioUnlocked) {
         const testSound = new Audio();
         testSound.play().catch(()=>{}); // tentativa “vazia” só para liberar
@@ -329,6 +336,8 @@ function tocarSomDirecao(dx, dy) {
 
 
 
+
+
 // adcionando eventos nas teclas do teclado
 
 // mover com a seta pra cima ou a tecla w
@@ -371,6 +380,48 @@ document.addEventListener("keydown", (evt) => {
 })
 
 
+let touchStartX = 0;
+let touchStartY = 0;
+
+canvas.addEventListener("touchstart", (e) => {
+    const touch = e.touches[0];
+    touchStartX = touch.clientX;
+    touchStartY = touch.clientY;
+});
+
+canvas.addEventListener("touchend", (e) => {
+    const touch = e.changedTouches[0];
+    const deltaX = touch.clientX - touchStartX;
+    const deltaY = touch.clientY - touchStartY;
+
+    // só considera swipe significativo (para evitar toques pequenos)
+    if (Math.abs(deltaX) < 20 && Math.abs(deltaY) < 20) return;
+
+    // horizontal ou vertical?
+    if (Math.abs(deltaX) > Math.abs(deltaY)) {
+        // horizontal
+        if (deltaX > 0 && dx !== -1) { // swipe para a direita
+            dx = 1;
+            dy = 0;
+        } else if (deltaX < 0 && dx !== 1) { // swipe para a esquerda
+            dx = -1;
+            dy = 0;
+        }
+    } else {
+        // vertical
+        if (deltaY > 0 && dy !== -1) { // swipe para baixo
+            dx = 0;
+            dy = 1;
+        } else if (deltaY < 0 && dy !== 1) { // swipe para cima
+            dx = 0;
+            dy = -1;
+        }
+    }
+
+    tocarSomDirecao(dx, dy);
+});
+
+
 // criar uma função para gerar frutas em lugares aleatorios da arena
 // 25 colunas = x de 0 a 24
 // 25 linhas = y de 0 a 24
@@ -408,6 +459,7 @@ function gerarFruta() {
 
     const idx = Math.floor(Math.random() * livres.length);
     fruta = livres[idx];
+    
 }
 
 // função para denhar a fruta
@@ -470,5 +522,7 @@ function resetarJogo() {
 desenharXadrez()
 desenharCobra()
 desenharFruta()
+
+
 
 
