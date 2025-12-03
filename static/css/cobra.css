@@ -52,7 +52,7 @@ canvas{
 /* Para telas menores (ex.: celular) */
 @media (max-width: 480px) {
     #game {
-        width: 418px;
-        height: 418px;
+        width: 352px;
+        height: 352px;
     }
 }

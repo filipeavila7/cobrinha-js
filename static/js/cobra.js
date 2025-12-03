@@ -83,9 +83,9 @@ let colunas = 11
 function ajustarTamanhoBloco() {
     if (window.innerWidth <= 480) {
         // celular
-        tamanho = 38;
-        canvas.width = 418;
-        canvas.height = 418;
+        tamanho = 32;
+        canvas.width = 352;
+        canvas.height = 352;
     } else {
         // desktop
         tamanho = 50; 
