@@ -52,10 +52,9 @@ canvas{
 /* Para telas menores (ex.: celular) */
 @media (max-width: 480px) {
     main{
-        padding: 100px;
+        padding: 20px;
     }
     body{
-        height: 100vh;
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -64,5 +63,11 @@ canvas{
     #game {
         width: 330px;
         height: 330px;
+    }
+
+
+    #contador{
+        margin-top: 30px;
+        font-size: 55px;
     }
 }
