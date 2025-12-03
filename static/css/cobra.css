@@ -48,3 +48,11 @@ canvas{
     color: white;
     font-family: "Bitcount", system-ui;
 }
+
+/* Para telas menores (ex.: celular) */
+@media (max-width: 480px) {
+    #game {
+        width: 418px;
+        height: 418px;
+    }
+}

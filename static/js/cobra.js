@@ -15,6 +15,16 @@ let contador = document.querySelector("#contador")
 let valor = 0
 
 
+// definir o canvas de acordo com a largura da tela
+function ajustarCanvas() {
+    const menor = Math.min(window.innerWidth, window.innerHeight);
+}
+ajustarCanvas();
+window.addEventListener("resize", ajustarCanvas);
+
+
+
+
 
 let audioUnlocked = false;
 
@@ -65,27 +75,27 @@ document.addEventListener("keydown", (e) => {
 
 // criar o tamanho da arena
 
-let tamanho = 50; // default desktop
-const colunas = 11; // para manter a mesma quantidade de blocos
-let linhas = 11; 
+let tamanho = 50 // tamanho dos blocos
+let linhas = 11
+let colunas = 11
 
 
-
-function ajustarCanvas() {
-    // pega menor lado da tela
-    const menorLado = Math.min(window.innerWidth, window.innerHeight);
-    const margem = 20;
-
-    canvas.width = menorLado - margem;
-    canvas.height = menorLado - margem;
-
-    // recalcula tamanho do bloco para caber na grade
-    tamanho = canvas.width / colunas;
-    linhas = Math.floor(canvas.height / tamanho);
+function ajustarTamanhoBloco() {
+    if (window.innerWidth <= 480) {
+        // celular
+        tamanho = 38;
+        canvas.width = 418;
+        canvas.height = 418;
+    } else {
+        // desktop
+        tamanho = 50; 
+        canvas.width = 550;
+        canvas.height = 550;
+    }
 }
 
-ajustarCanvas();
-window.addEventListener("resize", ajustarCanvas);
+ajustarTamanhoBloco();
+window.addEventListener("resize", ajustarTamanhoBloco);
 
 // criando a cobra, contendo cabeça e 2 pixels de corpo
 
