@@ -400,14 +400,26 @@ let touchStartX = 0;
 let touchStartY = 0;
 
 document.addEventListener("touchstart", (e) => {
-    if (e.target.id === "btn-play") return; // permite o click do botão
-    e.preventDefault(); // impede scroll/zoom no restante da tela
-    touchStartX = e.touches[0].clientX;
-    touchStartY = e.touches[0].clientY;
+
+    // Se clicou em um botão, deixa o click funcionar!
+    if (e.target.tagName === "BUTTON" || e.target.tagName === "IMG") return;
+
+    e.preventDefault(); // impede scroll ou zoom
+
+    const touch = e.touches[0];
+    touchStartX = touch.clientX;
+    touchStartY = touch.clientY;
+
 }, { passive: false });
 
-canvas.addEventListener("touchend", (e) => {
-    e.preventDefault(); // impede scroll/zoom
+
+document.addEventListener("touchend", (e) => {
+
+    // Se soltou o toque em um botão, não queremos swipe.
+    if (e.target.tagName === "BUTTON" || e.target.tagName === "IMG") return;
+
+    e.preventDefault();
+
     const touch = e.changedTouches[0];
     const deltaX = touch.clientX - touchStartX;
     const deltaY = touch.clientY - touchStartY;
@@ -423,6 +435,7 @@ canvas.addEventListener("touchend", (e) => {
     }
 
     tocarSomDirecao(dx, dy);
+
 }, { passive: false });
 
 
